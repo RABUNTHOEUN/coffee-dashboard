@@ -1,3 +1,5 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,11 +12,72 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import { useState } from "react"
+import { baseUrl } from "@/utils/config"
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [role, setRole] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError(""); // Clear any previous errors
+
+    if (!firstName || !lastName || !email || !password || !phoneNumber || !role) {
+      setError("All fields are required.");
+      return;
+    }
+
+    // Example of posting the form data to the backend
+    try {
+      const response = await fetch(`${baseUrl}/Auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          phoneNumber,
+          role,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Registration failed. Please try again.");
+      }
+
+      // const data = await response.json(); // Await the response JSON
+
+      // // Assuming the token is in data.token
+      // const token = data.token;  // Replace 'token' with the actual field name from your API response
+
+      // if (token) {
+      //   // Save the token to localStorage
+      //   localStorage.setItem("user", token);
+
+      //   // Handle success (e.g., redirect or show a success message)
+      //   console.log("Registration successful!");
+      // } else {
+      //   setError("Token not found in response.");
+      // }
+      console.log("Registration successful!");
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -25,47 +88,99 @@ export function RegisterForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
+              {/* First Name Field */}
               <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="firstName">First Name</Label>
                 <Input
-                  id="email"
+                  id="firstName"
                   type="text"
-                  placeholder="username"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="First Name"
                   required
                 />
               </div>
+
+              {/* Last Name Field */}
               <div className="grid gap-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="lastName">Last Name</Label>
                 <Input
-                  id="phone"
+                  id="lastName"
                   type="text"
-                  placeholder="097779797"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Last Name"
                   required
                 />
               </div>
+
+              {/* Email Field */}
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
                   required
                 />
               </div>
+
+              {/* Phone Number Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input
+                  id="phoneNumber"
+                  type="text"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="097779797"
+                  required
+                />
+              </div>
+
+              {/* Password Field */}
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </div>
+
+              {/* Role Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="role">Role</Label>
+                <Input
+                  id="role"
+                  type="text"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  placeholder="Admin/User"
+                  required
+                />
+              </div>
+
+              {/* Displaying errors */}
+              {error && (
+                <div className="mt-2 text-red-500 text-sm">{error}</div>
+              )}
+
+              {/* Submit Button */}
               <Button type="submit" className="w-full">
                 Register
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              have an account?{" "}
+              Have an account?{" "}
               <Link href="/login" className="underline underline-offset-4">
                 Sign In
               </Link>
