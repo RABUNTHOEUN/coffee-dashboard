@@ -15,7 +15,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         // Check local storage or session for login state
-        const loggedInUser = localStorage.getItem('user');
+        const loggedInUser = localStorage.getItem('token');
         if (loggedInUser) {
             setIsAuthenticated(true);
         }
@@ -23,13 +23,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
     const login = () => {
         // Set user as authenticated (you can replace with your own logic)
-        localStorage.setItem('user', JSON.stringify({ username: 'user' }));
+        localStorage.setItem('token', JSON.stringify({ username: 'token' }));
         setIsAuthenticated(true);
     };
 
     const logout = () => {
         // Remove user from storage and set to false
-        localStorage.removeItem('user');
+        localStorage.removeItem('token');
         setIsAuthenticated(false);
     };
 

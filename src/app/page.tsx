@@ -1,27 +1,77 @@
-import { AreaChartComponent } from '@/components/area-chart'
-import { AreaChartInteractiveComponent } from '@/components/area-chart-interactive'
-import { BarChartComponent } from '@/components/bar-chart'
-import { PieChartComponent } from '@/components/pie-chart'
-import React from 'react'
-import Invoice from './invoice/page'
+"use client"
 
-const Home = () => {
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { ModeToggle } from '@/components/mode-toggle';
+import Dashboard from './dashboard/page';
+
+const Home = ({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Ensure this runs only on the client
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.replace("/login"); // Redirect to login page
+      }
+    }
+  }, [router]);
   return (
     <div>
-      <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white mb-4 ml-4">
-        Dashboard
-      </h1>
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="aspect-video rounded-xl bg-muted/50" ><AreaChartComponent /></div>
-        <div className="aspect-video rounded-xl bg-muted/50" ><BarChartComponent /></div>
-        <div className="aspect-video rounded-xl bg-muted/50" ><PieChartComponent /></div>
-      </div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min my-4" ><AreaChartInteractiveComponent /></div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min my-4 pt-4">
-        <Invoice />
-      </div>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+            <div className="flex gap-4 w-full justify-between">
+              <div className="flex items-center gap-2 px-4">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem className="hidden md:block">
+                      <BreadcrumbLink href="#">
+                        Building Your Application
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </div>
+              <div className="mr-4">
+                <ModeToggle />
+              </div>
+            </div>
+          </header>
+          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+            <Dashboard/>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
