@@ -35,7 +35,7 @@ const page = () => {
             <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
                 Profile - {user.firstName} {user.lastName}
             </h1>
-            <div className="mt-4 p-6 bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div className="mt-4 p-6 bg-white dark:bg-gray-900 shadow rounded-lg">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex flex-col">
                         <label className="text-sm text-gray-600 dark:text-gray-300">First Name</label>
