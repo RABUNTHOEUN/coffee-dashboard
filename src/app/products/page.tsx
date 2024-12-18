@@ -1,5 +1,4 @@
-"use client"
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     Table,
     TableBody,
@@ -10,97 +9,62 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import ProductPagination from '@/components/pagination/page';
+import { Button } from '@/components/ui/button';
+import { Delete, Edit, Trash2 } from 'lucide-react';
+import { baseUrl } from '@/utils/config';
 
-interface Product {
-    id : number;
-    categoryId: number;
-    categoryName: string;
-    description: string;
-    imageUrl: string;
-    price: number;
-    inventoryId: number;
-    name: string;
+const page = async () => {
+    
+    let products = [];
 
-}
-
-
-interface ApiResponse {
-    products: Product[];
-    totalPages: number;
-}
-
-const Page: React.FC = () => {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-    const [currentPage, setCurrentPage] = useState<number>(1); // State for current page
-    const [totalPages, setTotalPages] = useState<number>(1); // To handle pagination
-
-    useEffect(() => {
-        // Fetch data from the API with pagination
-        fetch(`http://localhost:5044/api/products?page=${currentPage}`)
-            .then((response) => {
-                console.log('Response:', response); // Log the response object
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data: ApiResponse) => {
-                console.log(data); // Log the fetched data
-                setProducts(data.products); // Assuming the API returns { products: [...] }
-                setTotalPages(data.totalPages); // Assuming the API returns total pages info
-                setLoading(false); // Set loading to false
-            })
-            .catch((error: Error) => {
-                console.error('Error:', error.message); // Log the error message
-                setError(error.message); // Set error message if any
-                setLoading(false);
-            });
-    }, [currentPage]); // Refetch data whenever currentPage changes
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
+    try {
+        const data = await fetch(`${baseUrl}/Products`);
+        if (!data.ok) {
+            throw new Error(`HTTP error! status: ${data.status}`);
+        }
+        products = await data.json();
+    } catch (error) {
+        console.error("Failed to fetch products:", error);
     }
 
     return (
         <div>
             <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
-                Product List
+                Products List
             </h1>
             <Table>
-                <TableCaption>A list of your recent products.</TableCaption>
+                <TableCaption>A list of your products.</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[100px]">Product Number</TableHead>
-                        <TableHead>Category</TableHead>
+                        <TableHead className="w-[100px]">ID</TableHead>
+                        <TableHead>Name</TableHead>
                         <TableHead>Description</TableHead>
-                        <TableHead className="text-right">Price</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {/* Map over the products array to create TableRows dynamically */}
-                    {products.map((product) => (
+                    {products.map((product: any, index: number) => (
                         <TableRow key={product.id}>
-                            <TableCell className="font-medium">{product.name}</TableCell>
-                            <TableCell>{product.categoryName}</TableCell>
-                            <TableCell>{product.description}</TableCell>
-                            <TableCell className="text-right">${product.price.toFixed(2)}</TableCell>
+                            <TableCell className="font-medium">{index + 1}</TableCell>
+                            <TableCell>{product.name}</TableCell>
+                            <TableCell>{product.description || "N/A"}</TableCell>
+                            <TableCell>{product.price || 0}</TableCell>
+                            <TableCell>{product.categoryName || 0}</TableCell>
+                            <TableCell>
+                                <div className='flex gap-2'>
+                                    <Button variant="outline" className='hover:text-blue-600'><Edit/></Button>
+                                    <Button variant="outline" className='hover:text-red-600'><Trash2/></Button>
+                                </div>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-            {/* <ProductPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-            /> */}
+            <ProductPagination />
         </div>
     );
 };
 
-export default Page;
+export default page;

@@ -10,59 +10,61 @@ import {
 } from "@/components/ui/table";
 import ProductPagination from '@/components/pagination/page';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2 } from 'lucide-react';
+import { CircleCheck, CircleX, Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
 import moment from 'moment';
 
 const page = async () => {
 
-    let inventories = [];
+    let discounts = [];
 
     try {
-        const data = await fetch(`${baseUrl}/Inventory`);
+        const data = await fetch(`${baseUrl}/Discount`);
         if (!data.ok) {
             throw new Error(`HTTP error! status: ${data.status}`);
         }
-        inventories = await data.json();
+        discounts = await data.json();
     } catch (error) {
-        console.error("Failed to fetch inventories:", error);
+        console.error("Failed to fetch discounts:", error);
     }
 
     return (
         <div>
             <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
-                Inventory List
+                Discounts List
             </h1>
             <Table>
-                <TableCaption>A list of your Inventories.</TableCaption>
+                <TableCaption>A list of your Discounts.</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[100px]">ID</TableHead>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Stock Quantity</TableHead>
-                        <TableHead>RestockDate</TableHead>
+                        <TableHead>Code</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Discount Percentage</TableHead>
+                        <TableHead>Start Date</TableHead>
+                        <TableHead>End Date</TableHead>
+                        <TableHead>Status</TableHead>
                         <TableHead>Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {inventories.map((inventory: any, index: number) => (
-                        <TableRow key={inventory.id}>
+                    {discounts.map((discount: any, index: number) => (
+                        <TableRow key={discount.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
-                            <TableCell>{inventory.productId || "N/A"}</TableCell>
-                            <TableCell
-                                className={
-                                    inventory.stockQuantity < 10
-                                        ? "text-red-500 dark:text-red-400"
-                                        : "text-gray-900 dark:text-white"
-                                }
-                            >
-                                {inventory.stockQuantity !== undefined && inventory.stockQuantity !== null
-                                    ? inventory.stockQuantity
-                                    : "N/A"}
+                            <TableCell>{discount.code}</TableCell>
+                            <TableCell>{discount.description || "N/A"}</TableCell>
+                            <TableCell>{discount.discountPercentage || 0}</TableCell>
+                            <TableCell className='min-w-32'>
+                                {discount.startDate ? moment(discount.startDate).format('MMM, DD, YYYY') : "N/A"}
                             </TableCell>
                             <TableCell className='min-w-32'>
-                                {inventory.restockDate ? moment(inventory.restockDate).format('MMM, DD, YYYY') : "N/A"}
+                                {discount.endDate ? moment(discount.endDate).format('MMM, DD, YYYY') : "N/A"}
                             </TableCell>
+                            <TableCell>{discount.active ? (
+                                <span className="text-green-500"><CircleCheck /></span>
+                            ) : (
+                                <span className="text-red-500"><CircleX /></span>
+                            )}</TableCell>
                             <TableCell>
                                 <div className='flex gap-2'>
                                     <Button variant="outline" className='hover:text-blue-600'><Edit /></Button>

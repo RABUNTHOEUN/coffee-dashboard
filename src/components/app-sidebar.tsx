@@ -74,6 +74,10 @@ const data = {
           url: "coffee-bean",
         },
         {
+          title: "Discount",
+          url: "discount",
+        },
+        {
           title: "Inventory",
           url: "inventory",
         },
