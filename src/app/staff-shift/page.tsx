@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
     Table,
     TableBody,
@@ -7,92 +7,73 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import ProductPagination from '@/components/pagination/page'
+} from "@/components/ui/table";
+import ProductPagination from '@/components/pagination/page';
+import { Button } from '@/components/ui/button';
+import { Edit, Trash2 } from 'lucide-react';
+import { baseUrl } from '@/utils/config';
+import moment from 'moment';
 
+const page = async () => {
 
-const page = () => {
+    let staffshifts = [];
+
+    try {
+        const data = await fetch(`${baseUrl}/StaffShift`);
+        if (!data.ok) {
+            throw new Error(`HTTP error! status: ${data.status}`);
+        }
+        staffshifts = await data.json();
+    } catch (error) {
+        console.error("Failed to fetch staffshifts:", error);
+    }
+
     return (
         <div>
             <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
                 Staff Shift List
             </h1>
             <Table>
-                <TableCaption>A list of your recent invoices.</TableCaption>
+                <TableCaption>A list of your staffshifts.</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[100px]">Invoice</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Method</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
+                        <TableHead className="w-[100px]">ID</TableHead>
+                        <TableHead>User</TableHead>
+                        <TableHead>Start Time</TableHead>
+                        <TableHead>End Time</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>User</TableHead>
+                        <TableHead>Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
+                    {staffshifts.map((staffshift: any, index: number) => (
+                        <TableRow key={staffshift.id}>
+                            <TableCell className="font-medium">{index + 1}</TableCell>
+                            <TableCell>{staffshift.userId}</TableCell>
+                            <TableCell className='min-w-32'>
+                                {staffshift.startTime ? moment(staffshift.startTime).format('MMM, DD, YYYY') : "N/A"}
+                            </TableCell>
+                            <TableCell className='min-w-32'>
+                                {staffshift.endTime ? moment(staffshift.endTime).format('MMM, DD, YYYY') : "N/A"}
+                            </TableCell>
+                            <TableCell className='min-w-32'>
+                                {staffshift.shiftDate ? moment(staffshift.shiftDate).format('MMM, DD, YYYY') : "N/A"}
+                            </TableCell>
+                            <TableCell>{staffshift.user || "N/A"}</TableCell>
+                            <TableCell>
+                                <div className='flex gap-2'>
+                                    <Button variant="outline" className='hover:text-blue-600'><Edit /></Button>
+                                    <Button variant="outline" className='hover:text-red-600'><Trash2 /></Button>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
             <ProductPagination />
         </div>
-    )
-}
+    );
+};
 
-export default page
+export default page;
