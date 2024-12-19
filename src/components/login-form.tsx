@@ -51,6 +51,7 @@ export function LoginForm({
       // Save the token to localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      document.cookie = `token=${token}; path=/;`;
 
       // Optionally, set the login state in the app (you can update your user context or global state here)
       // Example:
@@ -58,7 +59,7 @@ export function LoginForm({
 
       // Redirect the user to another page, if needed
       // For example, redirecting to the home page:
-      window.location.href = "/";
+      window.location.href = "/dashboard";
       // Redirect user or set login state here
     } catch (err: any) {
       setError(err.message);

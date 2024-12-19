@@ -67,6 +67,7 @@ export function RegisterForm({
       // Save the token to localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      document.cookie = `token=${token}; path=/;`;
 
       // Optionally, set the login state in the app (you can update your user context or global state here)
       // Example:
@@ -74,7 +75,7 @@ export function RegisterForm({
 
       // Redirect the user to another page, if needed
       // For example, redirecting to the home page:
-      window.location.href = "/";
+      window.location.href = "/dashboard";
       // console.log("Registration successful!");
     } catch (err: any) {
       setError(err.message);

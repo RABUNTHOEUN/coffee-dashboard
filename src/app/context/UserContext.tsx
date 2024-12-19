@@ -30,10 +30,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(true);
     };
 
+    const clearCookies = () => {
+        document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+      };
+
     const logout = () => {
         // Remove user from storage and set to false
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        clearCookies();
         router.push('/login');
         setIsAuthenticated(false);
     };

@@ -59,47 +59,47 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/",
+          url: "/dashboard",
         },
         {
           title: "Products",
-          url: "/products",
+          url: "/dashboard/products",
         },
         {
           title: "Category",
-          url: "categories",
+          url: "/dashboard/categories",
         },
         {
           title: "CoffeeBean",
-          url: "coffee-bean",
+          url: "/dashboard/coffee-bean",
         },
         {
           title: "Discount",
-          url: "discount",
+          url: "/dashboard/discount",
         },
         {
           title: "Inventory",
-          url: "inventory",
+          url: "/dashboard/inventory",
         },
         {
           title: "Order",
-          url: "order",
+          url: "/dashboard/order",
         },
         {
           title: "Order Items",
-          url: "order-item",
+          url: "/dashboard/order-item",
         },
         {
           title: "Payment",
-          url: "payment",
+          url: "/dashboard/payment",
         },
         {
           title: "Review",
-          url: "review",
+          url: "/dashboard/review",
         },
         {
           title: "Staff Shift",
-          url: "staff-shift",
+          url: "/dashboard/staff-shift",
         },
       ],
     },
@@ -110,11 +110,11 @@ const data = {
       items: [
         {
           title: "Users",
-          url: "users",
+          url: "/dashboard/users",
         },
         {
           title: "Profile",
-          url: "profile",
+          url: "/dashboard/profile",
         },
         
       ],
