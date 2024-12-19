@@ -12,7 +12,12 @@ import ProductPagination from '@/components/pagination/page';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
-import moment from 'moment';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "Order Item",
+    description: "Order Item",
+};
 
 const page = async () => {
 

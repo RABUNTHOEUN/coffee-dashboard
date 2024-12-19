@@ -9,7 +9,12 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import ProductPagination from '@/components/pagination/page'
+import { Metadata } from 'next';
 
+export const metadata: Metadata = {
+    title: "Invoice",
+    description: "Invoice",
+};
 
 const Invoice = () => {
     return (
