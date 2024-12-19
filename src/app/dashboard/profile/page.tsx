@@ -2,36 +2,27 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
-import { baseUrl } from '@/utils/config';
 import moment from 'moment';
 
-
-
 const page = () => {
-    const [user, setUser] = useState<any>(null);
-    const userId = "1"; // Replace with actual user ID (e.g., from context or route)
+    const [user, setUser] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        avatar: "",
+    });
 
     useEffect(() => {
-        const fetchUserProfile = async () => {
+        const userInfo = localStorage.getItem("user");
+        if (userInfo) {
             try {
-                const data = await fetch(`${baseUrl}/Users/${userId}`);
-                if (!data.ok) {
-                    throw new Error(`HTTP error! status: ${data.status}`);
-                }
-                const userData = await data.json();
-                setUser(userData);
+                const parsedUser = JSON.parse(userInfo);
+                setUser(parsedUser);
             } catch (error) {
-                console.error("Failed to fetch User:", error);
+                console.error("Failed to parse user info from localStorage:", error);
             }
-        };
-
-        fetchUserProfile();
-    }, [userId]);
-
-    if (!user) {
-        return <div>Loading...</div>;
-    }
-
+        }
+    }, []);
     return (
         <div>
             <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
@@ -51,7 +42,7 @@ const page = () => {
                         <label className="text-sm text-gray-600 dark:text-gray-300">Email</label>
                         <p className="text-lg font-medium text-gray-900 dark:text-white">{user.email || "N/A"}</p>
                     </div>
-                    <div className="flex flex-col">
+                    {/* <div className="flex flex-col">
                         <label className="text-sm text-gray-600 dark:text-gray-300">Phone</label>
                         <p className="text-lg font-medium text-gray-900 dark:text-white">{user.phoneNumber || "N/A"}</p>
                     </div>
@@ -64,7 +55,7 @@ const page = () => {
                         <p className="text-lg font-medium text-gray-900 dark:text-white">
                             {user.createdAt ? moment(user.createdAt).format('MMM, DD, YYYY') : "N/A"}
                         </p>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="mt-6 flex gap-2">
