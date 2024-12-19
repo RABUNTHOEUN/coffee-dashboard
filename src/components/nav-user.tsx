@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { useUserContext } from "@/app/context/UserContext"
 // import { useEffect } from "react"
 
 export function NavUser() {
@@ -53,6 +54,8 @@ export function NavUser() {
       }
     }
   }, []);
+
+  const { isAuthenticated, logout } = useUserContext();
 
   return (
     <SidebarMenu>
@@ -117,9 +120,11 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
+            <DropdownMenuItem onClick={logout}>
+              <div className="flex gap-4 items-center">
+                  <LogOut/>
+                  Log out
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

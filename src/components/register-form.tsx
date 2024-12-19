@@ -58,21 +58,24 @@ export function RegisterForm({
         throw new Error("Registration failed. Please try again.");
       }
 
-      // const data = await response.json(); // Await the response JSON
+      const data = await response.json(); // Await the response JSON
+      console.log("Login successful:", data);
+      // Assuming the token is in data.token
+      const token = data.token;  // Replace 'token' with the actual field name from your API response
+      const user = data.user;  // Replace 'token' with the actual field name from your API response
 
-      // // Assuming the token is in data.token
-      // const token = data.token;  // Replace 'token' with the actual field name from your API response
+      // Save the token to localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
 
-      // if (token) {
-      //   // Save the token to localStorage
-      //   localStorage.setItem("user", token);
+      // Optionally, set the login state in the app (you can update your user context or global state here)
+      // Example:
+      // setIsAuthenticated(true);
 
-      //   // Handle success (e.g., redirect or show a success message)
-      //   console.log("Registration successful!");
-      // } else {
-      //   setError("Token not found in response.");
-      // }
-      console.log("Registration successful!");
+      // Redirect the user to another page, if needed
+      // For example, redirecting to the home page:
+      window.location.href = "/";
+      // console.log("Registration successful!");
     } catch (err: any) {
       setError(err.message);
     }

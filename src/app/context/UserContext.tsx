@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 
 interface UserContextType {
@@ -12,6 +13,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const router = useRouter();
 
     useEffect(() => {
         // Check local storage or session for login state
@@ -20,6 +22,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             setIsAuthenticated(true);
         }
     }, []);
+
 
     const login = () => {
         // Set user as authenticated (you can replace with your own logic)
@@ -30,6 +33,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const logout = () => {
         // Remove user from storage and set to false
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        router.push('/login');
         setIsAuthenticated(false);
     };
 
