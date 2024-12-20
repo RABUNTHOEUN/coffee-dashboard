@@ -6,8 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "./context/UserContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import GlobalLoader from "@/components/GlobalLoader";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,11 +30,11 @@ export default function RootLayout({
 
   useEffect(() => {
     // Ensure this runs only on the client
-    // if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
     const token = localStorage.getItem("token");
     if (!token) {
       router.replace("/login"); // Redirect to login page
-      // }
+      }
     }
   }, [router]);
 
@@ -52,7 +50,6 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <GlobalLoader />
               {children}
             </ThemeProvider>
           </UserProvider>
