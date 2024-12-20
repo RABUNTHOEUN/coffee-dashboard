@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "./context/UserContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LoadingProvider } from "./context/loadingContext";
 import GlobalLoader from "@/components/GlobalLoader";
 
 const geistSans = Geist({
@@ -45,9 +44,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <LoadingProvider> */}
-
-
           <UserProvider>
             <ThemeProvider
               attribute="class"
@@ -59,7 +55,6 @@ export default function RootLayout({
               {children}
             </ThemeProvider>
           </UserProvider>
-        {/* </LoadingProvider> */}
       </body>
     </html>
   );
