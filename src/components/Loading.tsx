@@ -3,8 +3,8 @@ import React from 'react';
 
 const Loading = () => {
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="spinner-border animate-spin inline-block w-12 h-12 border-4 rounded-full border-t-blue-500 border-solid" role="status">
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-50 dark:bg-gray-900 opacity-70 flex justify-center items-center z-50">
+            <div className="animate-spin inline-block w-16 h-16 border-4 border-t-4 border-gray-300 dark:border-gray-600 border-solid rounded-full">
                 <span className="visually-hidden">Loading...</span>
             </div>
         </div>
