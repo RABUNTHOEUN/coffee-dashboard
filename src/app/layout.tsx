@@ -7,6 +7,7 @@ import { UserProvider } from "./context/UserContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingProvider } from "./context/loadingContext";
+import GlobalLoader from "@/components/GlobalLoader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,7 @@ export default function RootLayout({
       >
         <LoadingProvider>
 
+
           <UserProvider>
             <ThemeProvider
               attribute="class"
@@ -53,6 +55,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+              <GlobalLoader />
               {children}
             </ThemeProvider>
           </UserProvider>
