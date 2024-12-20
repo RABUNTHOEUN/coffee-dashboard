@@ -20,6 +20,14 @@ export const metadata: Metadata = {
     description: "Inventory",
 };
 
+interface Inventory {
+    id: string | number;
+    productId?: string | number;
+    stockQuantity?: number;
+    restockDate?: string | Date;
+}
+
+
 const page = async () => {
 
     let inventories = [];
@@ -51,13 +59,13 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {inventories.map((inventory: any, index: number) => (
+                    {inventories.map((inventory: Inventory, index: number) => (
                         <TableRow key={inventory.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{inventory.productId || "N/A"}</TableCell>
                             <TableCell
                                 className={
-                                    inventory.stockQuantity < 10
+                                    inventory.stockQuantity !== undefined && inventory.stockQuantity < 10
                                         ? "text-red-500 dark:text-red-400"
                                         : "text-gray-900 dark:text-white"
                                 }
@@ -66,17 +74,18 @@ const page = async () => {
                                     ? inventory.stockQuantity
                                     : "N/A"}
                             </TableCell>
-                            <TableCell className='min-w-32'>
+                            <TableCell className="min-w-32">
                                 {inventory.restockDate ? moment(inventory.restockDate).format('MMM, DD, YYYY') : "N/A"}
                             </TableCell>
                             <TableCell>
-                                <div className='flex gap-2'>
-                                    <Button variant="outline" className='hover:text-blue-600'><Edit /></Button>
-                                    <Button variant="outline" className='hover:text-red-600'><Trash2 /></Button>
+                                <div className="flex gap-2">
+                                    <Button variant="outline" className="hover:text-blue-600"><Edit /></Button>
+                                    <Button variant="outline" className="hover:text-red-600"><Trash2 /></Button>
                                 </div>
                             </TableCell>
                         </TableRow>
                     ))}
+
                 </TableBody>
             </Table>
             <ProductPagination />

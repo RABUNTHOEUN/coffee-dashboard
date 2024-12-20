@@ -77,9 +77,14 @@ export function RegisterForm({
       // For example, redirecting to the home page:
       window.location.href = "/dashboard";
       // console.log("Registration successful!");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
+    
   };
 
   return (

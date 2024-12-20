@@ -20,6 +20,17 @@ export const metadata: Metadata = {
     description: "Discount",
 };
 
+interface Discount {
+    id: string | number;
+    code: string;
+    description?: string;
+    discountPercentage?: number;
+    startDate?: string | Date;
+    endDate?: string | Date;
+    active: boolean;
+}
+
+
 const page = async () => {
 
     let discounts = [];
@@ -54,7 +65,7 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {discounts.map((discount: any, index: number) => (
+                    {discounts.map((discount: Discount, index: number) => (
                         <TableRow key={discount.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{discount.code}</TableCell>

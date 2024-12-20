@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import ProductPagination from '@/components/pagination/page';
 import { Button } from '@/components/ui/button';
-import { Delete, Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
 import { Metadata } from 'next';
 
@@ -18,6 +18,16 @@ export const metadata: Metadata = {
     title: "Boffee Bean",
     description: "Boffee Bean",
 };
+
+interface CoffeeBean {
+    id: string | number;
+    name: string;
+    origin?: string;
+    roastLevel?: string;
+    pricePerKg?: number;
+    stockQuantity?: number;
+}
+
 
 const page = async () => {
 
@@ -52,7 +62,7 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {coffee_beans.map((coffee_bean: any, index: number) => (
+                    {coffee_beans.map((coffee_bean: CoffeeBean, index: number) => (
                         <TableRow key={coffee_bean.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{coffee_bean.name}</TableCell>

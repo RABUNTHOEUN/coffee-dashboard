@@ -19,18 +19,27 @@ export const metadata: Metadata = {
     description: "Order Item",
 };
 
+interface OrderItem {
+    id: string | number;
+    orderId: string | number;
+    productId: string | number;
+    quantity?: number;
+    price?: number;
+}
+
+
 const page = async () => {
 
-    let orders = [];
+    let orderItems = [];
 
     try {
         const data = await fetch(`${baseUrl}/OrderItem`);
         if (!data.ok) {
             throw new Error(`HTTP error! status: ${data.status}`);
         }
-        orders = await data.json();
+        orderItems = await data.json();
     } catch (error) {
-        console.error("Failed to fetch orders:", error);
+        console.error("Failed to fetch orderItems:", error);
     }
 
     return (
@@ -51,13 +60,13 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {orders.map((order: any, index: number) => (
-                        <TableRow key={order.id}>
+                    {orderItems.map((orderItem: OrderItem, index: number) => (
+                        <TableRow key={orderItem.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
-                            <TableCell>{order.orderId}</TableCell>
-                            <TableCell>{order.productId}</TableCell>
-                            <TableCell>{order.quantity || 0 }</TableCell>
-                            <TableCell>{order.price || 0}</TableCell>
+                            <TableCell>{orderItem.orderId}</TableCell>
+                            <TableCell>{orderItem.productId}</TableCell>
+                            <TableCell>{orderItem.quantity || 0}</TableCell>
+                            <TableCell>{orderItem.price || 0}</TableCell>
                             <TableCell>
                                 <div className='flex gap-2'>
                                     <Button variant="outline" className='hover:text-blue-600'><Edit /></Button>

@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
 import { baseUrl } from "@/utils/config"
-import { json } from "stream/consumers"
 
 export function LoginForm({
   className,
@@ -61,9 +60,14 @@ export function LoginForm({
       // For example, redirecting to the home page:
       window.location.href = "/dashboard";
       // Redirect user or set login state here
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
+    
   };
 
   return (

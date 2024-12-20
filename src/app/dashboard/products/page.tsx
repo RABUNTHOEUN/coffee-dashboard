@@ -19,6 +19,15 @@ export const metadata: Metadata = {
     description: "Products",
 };
 
+interface Product {
+    id: string | number;
+    name: string;
+    description?: string;
+    price?: number;
+    categoryName?: string;
+}
+
+
 const page = async () => {
 
     let products = [];
@@ -51,7 +60,7 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {products.map((product: any, index: number) => (
+                    {products.map((product: Product, index: number) => (
                         <TableRow key={product.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{product.name}</TableCell>

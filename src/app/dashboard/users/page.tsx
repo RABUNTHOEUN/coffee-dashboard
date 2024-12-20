@@ -20,6 +20,17 @@ export const metadata: Metadata = {
     description: "User",
 };
 
+interface User {
+    id: string | number;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    role?: string;
+    phoneNumber?: string;
+    createdAt?: Date | string;
+}
+
+
 const page = async () => {
 
     let users = [];
@@ -54,7 +65,7 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {users.map((user: any, index: number) => (
+                    {users.map((user: User, index: number) => (
                         <TableRow key={user.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{user.firstName}</TableCell>

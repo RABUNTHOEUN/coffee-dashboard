@@ -20,6 +20,18 @@ export const metadata: Metadata = {
     description: "Payment",
 };
 
+interface Payment {
+    id: string | number;
+    orderId: string | number;
+    paymentMethod: string;
+    amount?: number;
+    paymentDate?: string | Date;
+    order?: {
+        orderStatus?: string;
+    };
+}
+
+
 const page = async () => {
 
     let payments = [];
@@ -54,7 +66,7 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {payments.map((payment: any, index: number) => (
+                    {payments.map((payment: Payment, index: number) => (
                         <TableRow key={payment.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{payment.orderId}</TableCell>

@@ -20,6 +20,16 @@ export const metadata: Metadata = {
     description: "Staff Shift",
 };
 
+interface StaffShift {
+    id: string | number;
+    userId: string | number;
+    startTime?: Date | string;
+    endTime?: Date | string;
+    shiftDate?: Date | string;
+    user?: string;
+}
+
+
 const page = async () => {
 
     let staffshifts = [];
@@ -53,7 +63,7 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {staffshifts.map((staffshift: any, index: number) => (
+                    {staffshifts.map((staffshift: StaffShift, index: number) => (
                         <TableRow key={staffshift.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{staffshift.userId}</TableCell>

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import ProductPagination from '@/components/pagination/page';
 import { Button } from '@/components/ui/button';
-import { Delete, Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
 import { Metadata } from 'next';
 
@@ -18,6 +18,14 @@ export const metadata: Metadata = {
     title: "Category",
     description: "Category",
 };
+
+interface Category {
+    id: string | number;
+    name: string;
+    description?: string;
+    productCount?: number;
+}
+
 
 const page = async () => {
 
@@ -50,7 +58,7 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {categories.map((category: any, index: number) => (
+                    {categories.map((category: Category, index: number) => (
                         <TableRow key={category.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{category.name}</TableCell>

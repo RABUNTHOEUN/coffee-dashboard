@@ -55,7 +55,7 @@ export function NavUser() {
     }
   }, []);
 
-  const { isAuthenticated, logout } = useUserContext();
+  const { logout } = useUserContext();
 
   return (
     <SidebarMenu>

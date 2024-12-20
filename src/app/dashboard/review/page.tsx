@@ -20,6 +20,16 @@ export const metadata: Metadata = {
     description: "Review",
 };
 
+interface Review {
+    id: string | number;
+    userId: string | number;
+    productId?: string | number;
+    rating?: number;
+    reviewText?: string;
+    reviewDate?: string | Date;
+}
+
+
 const page = async () => {
 
     let reviews = [];
@@ -53,14 +63,14 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {reviews.map((review: any, index: number) => (
+                    {reviews.map((review: Review, index: number) => (
                         <TableRow key={review.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{review.userId}</TableCell>
                             <TableCell>{review.productId || "N/A"}</TableCell>
                             <TableCell>{review.rating || 0}</TableCell>
                             <TableCell>{review.reviewText || "N/A"}</TableCell>
-                            <TableCell>{review.reviewDate || "N/A"}</TableCell>
+                            {/* <TableCell>{review.reviewDate || "N/A"}</TableCell> */}
                             <TableCell className='min-w-32'>
                                 {review.reviewDate ? moment(review.reviewDate).format('MMM, DD, YYYY') : "N/A"}
                             </TableCell>
