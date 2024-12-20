@@ -45,7 +45,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LoadingProvider>
+        {/* <LoadingProvider> */}
 
 
           <UserProvider>
@@ -59,7 +59,7 @@ export default function RootLayout({
               {children}
             </ThemeProvider>
           </UserProvider>
-        </LoadingProvider>
+        {/* </LoadingProvider> */}
       </body>
     </html>
   );
