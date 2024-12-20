@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "./context/UserContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-// import GlobalLoader from "@/components/GlobalLoader";
+import GlobalLoader from "@/components/GlobalLoader";
 
 
 const geistSans = Geist({
@@ -52,7 +52,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              {/* <GlobalLoader /> */}
+              <GlobalLoader />
               {children}
             </ThemeProvider>
           </UserProvider>
