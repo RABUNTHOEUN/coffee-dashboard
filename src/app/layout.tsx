@@ -52,7 +52,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <GlobalLoader />
+              {/* <GlobalLoader /> */}
               {children}
             </ThemeProvider>
           </UserProvider>

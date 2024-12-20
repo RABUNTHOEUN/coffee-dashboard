@@ -44,9 +44,12 @@ const page = async () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
-                Products List
-            </h1>
+            <div className='flex items-center justify-between'>
+                <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
+                    Products List
+                </h1>
+                <Button className='px-8 font-semibold'>New</Button>
+            </div>
             <Table>
                 <TableCaption>A list of your products.</TableCaption>
                 <TableHeader>
