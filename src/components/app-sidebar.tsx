@@ -35,9 +35,9 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Café CMS",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Small Shop",
     },
     // {
     //   name: "Acme Corp.",
