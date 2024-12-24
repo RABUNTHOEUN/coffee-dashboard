@@ -67,14 +67,22 @@ const CategoryPage = () => {
             });
     
             if (response.ok) {
-                toast.success('Category deleted successfully');
+                toast.success('Category deleted successfully',{
+                    style: {
+                        color: "red",
+                    },
+                });
                 setCategories(categories.filter(category => category.id !== id));  // Remove from state
             } else {
                 toast.error('Failed to delete category');
             }
         } catch (error) {
             console.error('Error deleting category:', error);
-            toast.error('An error occurred while deleting the category');
+            toast.error('An error occurred while deleting the category',{
+                style: {
+                    color: "red",
+                },
+            });
         } finally {
             setIsDeleting(false);  // Reset deleting state
         }

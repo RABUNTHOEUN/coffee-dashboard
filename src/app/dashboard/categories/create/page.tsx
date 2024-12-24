@@ -39,14 +39,22 @@ const CreateCategory = () => {
             const data = await response.json();
 
             // Show success toast
-            toast.success('Category created successfully!');
+            toast.success('Category created successfully!',{
+                style: {
+                    color: "green",
+                },
+            });
 
             // Clear the input fields
             setCategoryName('');
             setCategoryDescription('');
         } catch (error) {
             // Show error toast
-            toast.error('Error creating category');
+            toast.error('Error creating category',{
+                style: {
+                    color: "red",
+                },
+            });
             console.error(error);
         } finally {
             setLoading(false); // Reset loading state

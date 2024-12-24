@@ -64,10 +64,18 @@ const CategoryDetail = () => {
         throw new Error('Failed to update category');
       }
 
-      toast.success('Category updated successfully!');
+      toast.success('Category updated successfully!',{
+        style: {
+            color: "yellow",
+        },
+    });
       router.push('/dashboard/categories'); // Redirect after success
     } catch (error) {
-      toast.error('Error updating category');
+      toast.error('Error updating category',{
+        style: {
+            color: "red",
+        },
+    });
       console.error(error);
     } finally {
       setLoading(false); // Reset loading state
