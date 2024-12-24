@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'; // Make sure you have your input 
 import { Button } from '@/components/ui/button'; // Same for button
 import { baseUrl } from '@/utils/config'; // Assuming you have a config file for base URL
 import { useParams } from 'next/navigation';  // Import useParams to get route params
+import { toast } from 'sonner';
 
 const CategoryDetail = () => {
   const { id } = useParams(); // Use useParams to get the dynamic ID parameter from the URL
@@ -21,13 +22,19 @@ const CategoryDetail = () => {
     if (id) {
       setLoading(true);
       fetch(`${baseUrl}/Categories/${id}`)
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch category data');
+          }
+          return response.json();
+        })
         .then((data) => {
           setCategory({ name: data.name, description: data.description });
           setLoading(false);
         })
         .catch((err) => {
           setError('Failed to fetch category data');
+          toast.error(err.message); // Use toast.error for error messages
           setLoading(false);
         });
     }
@@ -42,6 +49,8 @@ const CategoryDetail = () => {
       description: category.description,
     };
 
+    setLoading(true); // Set loading state while making the request
+
     try {
       const response = await fetch(`${baseUrl}/Categories/${id}`, {
         method: 'PUT',
@@ -55,12 +64,13 @@ const CategoryDetail = () => {
         throw new Error('Failed to update category');
       }
 
-      alert('Category updated successfully!');
-      // You can redirect after the update
-      router.push('/dashboard/categories');
+      toast.success('Category updated successfully!');
+      router.push('/dashboard/categories'); // Redirect after success
     } catch (error) {
-      alert('Error updating category');
+      toast.error('Error updating category');
       console.error(error);
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -70,7 +80,7 @@ const CategoryDetail = () => {
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
-        <p>{error}</p>
+        <p className="text-red-500">{error}</p> // Show error message in red
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -91,8 +101,8 @@ const CategoryDetail = () => {
               required
             />
           </div>
-          <Button type="submit" className="w-full">
-            Update Category
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Updating...' : 'Update Category'} {/* Update button text based on loading state */}
           </Button>
         </form>
       )}
