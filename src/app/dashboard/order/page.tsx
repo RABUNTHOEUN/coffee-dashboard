@@ -14,6 +14,7 @@ import { Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
 import moment from 'moment';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: "Order",
@@ -47,9 +48,14 @@ const page = async () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
-                Orders List
-            </h1>
+            <div className='flex items-center justify-between'>
+                <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
+                    Orders List
+                </h1>
+                <Link href="/dashboard/order/create">
+                    <Button className='px-8 font-semibold'>New</Button>
+                </Link>
+            </div>
             <Table>
                 <TableCaption>A list of your orders.</TableCaption>
                 <TableHeader>

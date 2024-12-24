@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -12,13 +14,8 @@ import ProductPagination from '@/components/pagination/page';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
-import { Metadata } from 'next';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-    title: "Products",
-    description: "Products",
-};
+import { toast } from 'sonner';
 
 interface Product {
     id: string | number;
@@ -28,29 +25,64 @@ interface Product {
     categoryName?: string;
 }
 
+const Page = () => {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
 
-const page = async () => {
+    // Fetch products on component mount
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const data = await fetch(`${baseUrl}/Products`);
+                if (!data.ok) {
+                    throw new Error(`HTTP error! status: ${data.status}`);
+                }
+                const result = await data.json();
+                setProducts(result);
+            } catch (error) {
+                console.error("Failed to fetch products:", error);
+                toast.error("Failed to fetch products.");
+            }
+        };
 
-    let products = [];
+        fetchProducts();
+    }, []);
 
-    try {
-        const data = await fetch(`${baseUrl}/Products`);
-        if (!data.ok) {
-            throw new Error(`HTTP error! status: ${data.status}`);
+    // Handle product delete
+    const handleDelete = async (id: string | number) => {
+        if (!confirm("Are you sure you want to delete this product?")) return;
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch(`${baseUrl}/Products/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to delete product with ID ${id}`);
+            }
+
+            toast.success("Product deleted successfully!");
+            // Remove the deleted product from the state
+            setProducts((prevProducts) =>
+                prevProducts.filter((product) => product.id !== id)
+            );
+        } catch (error) {
+            console.error("Error deleting product:", error);
+            toast.error("Failed to delete product.");
+        } finally {
+            setIsDeleting(false);
         }
-        products = await data.json();
-    } catch (error) {
-        console.error("Failed to fetch products:", error);
-    }
+    };
 
     return (
         <div>
-            <div className='flex items-center justify-between'>
+            <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
                     Products List
                 </h1>
                 <Link href={"/dashboard/products/create"}>
-                    <Button className='px-8 font-semibold'>New</Button>
+                    <Button className="px-8 font-semibold">New</Button>
                 </Link>
             </div>
             <Table>
@@ -66,17 +98,28 @@ const page = async () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {products.map((product: Product, index: number) => (
+                    {products.map((product, index) => (
                         <TableRow key={product.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{product.name}</TableCell>
                             <TableCell>{product.description || "N/A"}</TableCell>
                             <TableCell>{product.price || 0}</TableCell>
-                            <TableCell>{product.categoryName || 0}</TableCell>
+                            <TableCell>{product.categoryName || "N/A"}</TableCell>
                             <TableCell>
-                                <div className='flex gap-2'>
-                                    <Button variant="outline" className='hover:text-blue-600'><Edit /></Button>
-                                    <Button variant="outline" className='hover:text-red-600'><Trash2 /></Button>
+                                <div className="flex gap-2">
+                                    <Link href={`/dashboard/products/${product.id}`}>
+                                        <Button variant="outline" className="hover:text-blue-600">
+                                            <Edit />
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        onClick={() => handleDelete(product.id)}
+                                        variant="outline"
+                                        className="hover:text-red-600"
+                                        disabled={isDeleting}
+                                    >
+                                        <Trash2 />
+                                    </Button>
                                 </div>
                             </TableCell>
                         </TableRow>
@@ -88,4 +131,4 @@ const page = async () => {
     );
 };
 
-export default page;
+export default Page;

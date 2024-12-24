@@ -37,6 +37,8 @@ const CreateCategory = () => {
             }
 
             const data = await response.json();
+            console.log(data);
+            
 
             // Show success toast
             toast.success('Category created successfully!',{
