@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: "Products",
@@ -48,7 +49,9 @@ const page = async () => {
                 <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
                     Products List
                 </h1>
-                <Button className='px-8 font-semibold'>New</Button>
+                <Link href={"/dashboard/products/create"}>
+                    <Button className='px-8 font-semibold'>New</Button>
+                </Link>
             </div>
             <Table>
                 <TableCaption>A list of your products.</TableCaption>
