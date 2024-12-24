@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "./context/UserContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              <Toaster />
             </ThemeProvider>
           </UserProvider>
       </body>
