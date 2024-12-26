@@ -64,7 +64,7 @@ const CreateCategory = () => {
     };
 
     return (
-        <div className="p-4 w-1/2 mx-auto">
+        <div className="p-4 w-full lg:w-1/2 mx-auto">
             <h2 className="text-xl font-bold mb-4">Create Category</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">

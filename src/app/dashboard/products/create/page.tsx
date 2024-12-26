@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // For navigation after creating the product
 import { Input } from '@/components/ui/input'; // Assuming you have a reusable input component
 import { Button } from '@/components/ui/button'; // Assuming you have a reusable button component
 import { toast } from 'sonner'; // Importing toast for notifications
 import { baseUrl } from '@/utils/config'; // Base URL for your API
 
 const CreateProduct = () => {
-    const router = useRouter();
     const [product, setProduct] = useState({
         name: '',
         description: '',
@@ -67,8 +65,22 @@ const CreateProduct = () => {
                 throw new Error('Failed to create product');
             }
 
-            toast.success('Product created successfully');
-            router.push('/dashboard/products'); // Navigate to the products list page after creation
+            toast.success('Product created successfully',{
+                style: {
+                    color: "green",
+                },
+            });
+            // router.push('/dashboard/products'); // Navigate to the products list page after creation
+
+            // Reset the form to its initial state
+            setProduct({
+                name: '',
+                description: '',
+                price: 0,
+                categoryId: 0,
+                // imageUrl: ''
+            });
+
         } catch (error) {
             toast.error('Error creating product');
             console.error(error);
@@ -79,7 +91,7 @@ const CreateProduct = () => {
 
     return (
         <>
-            <div className="p-4 w-1/2 mx-auto">
+            <div className="p-4 w-full lg:w-1/2 mx-auto">
                 <h2 className="text-xl font-bold mb-4">Create New Product</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">

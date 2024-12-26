@@ -32,9 +32,9 @@ export default function RootLayout({
   useEffect(() => {
     // Ensure this runs only on the client
     if (typeof window !== 'undefined') {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.replace("/login"); // Redirect to login page
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.replace("/login"); // Redirect to login page
       }
     }
   }, [router]);
@@ -44,17 +44,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          <UserProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-              <Toaster />
-            </ThemeProvider>
-          </UserProvider>
+        <UserProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </UserProvider>
       </body>
     </html>
   );

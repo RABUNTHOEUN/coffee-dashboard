@@ -13,15 +13,10 @@ import ProductPagination from '@/components/pagination/page';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
-// import { Metadata } from 'next';
 import Link from 'next/link';
 import { toast } from "sonner"
 
 
-// export const metadata: Metadata = {
-//     title: "Category",
-//     description: "Category",
-// };
 
 interface Category {
     id: string | number;
@@ -69,12 +64,16 @@ const CategoryPage = () => {
             if (response.ok) {
                 toast.success('Category deleted successfully',{
                     style: {
-                        color: "red",
+                        color: "green",
                     },
                 });
                 setCategories(categories.filter(category => category.id !== id));  // Remove from state
             } else {
-                toast.error('Failed to delete category');
+                toast.error('Failed to delete category',{
+                    style: {
+                        color: "red",
+                    },
+                });
             }
         } catch (error) {
             console.error('Error deleting category:', error);

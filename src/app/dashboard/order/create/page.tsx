@@ -7,111 +7,219 @@ import { Card } from '@/components/ui/card';
 import { baseUrl } from '@/utils/config';
 import { Loader2 } from 'lucide-react';
 import { Product } from '@/app/types';
+import { toast } from 'sonner';
 
 const CreateOrder = () => {
     const [products, setProducts] = useState<Product[]>([]);
-    const [orderItems, setOrderItems] = useState<{ productId: number; quantity: number }[]>([]);
-    const [deliveryAddress, setDeliveryAddress] = useState('');
+    const [orderItems, setOrderItems] = useState<
+        { productId: number; productName: string; quantity: number }[]
+    >([]);
+    const [deliveryAddress, setDeliveryAddress] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isFetchingProducts, setIsFetchingProducts] = useState(true);
+    const [userId, setUserId] = useState<number | null>(null);
+    const [token, setToken] = useState<string | null>(null);
 
-    // Fetch products on component mount
+    useEffect(() => {
+        const user = localStorage.getItem("user");
+        const storedToken = localStorage.getItem("token");
+
+        if (user) {
+            try {
+                setUserId(JSON.parse(user).id);
+            } catch (error) {
+                console.error("Failed to parse user data:", error);
+            }
+        }
+        setToken(storedToken || null);
+    }, []);
+
     useEffect(() => {
         const fetchProducts = async () => {
-            const response = await fetch(`${baseUrl}/Products`);
-            const data = await response.json();
-            setProducts(data);
+            try {
+                setIsFetchingProducts(true);
+                const response = await fetch(`${baseUrl}/Products`);
+                if (!response.ok) throw new Error("Failed to fetch products");
+                const data = await response.json();
+                setProducts(data);
+                toast.success("Products fetched successfully!", {
+                    style: {
+                        color: "green",
+                    },
+                });
+            } catch (error) {
+                console.error(error);
+                toast.error("Error fetching products.", {
+                    style: {
+                        color: "red",
+                    },
+                });
+            } finally {
+                setIsFetchingProducts(false);
+            }
         };
 
         fetchProducts();
-
     }, []);
 
-    // Add product to the order
-    const handleAddItem = (productId: number) => {
-        setOrderItems([
-            ...orderItems,
-            { productId, quantity: 1 }, // Default quantity is 1
-        ]);
+    const handleAddItem = (product: Product) => {
+        setOrderItems((prevItems) => {
+            const existingItem = prevItems.find((item) => item.productId === product.id);
+            if (existingItem) {
+                toast.success(`${product.name} quantity updated.`, {
+                    style: {
+                        color: "green",
+                    },
+                });
+                return prevItems.map((item) =>
+                    item.productId === product.id
+                        ? { ...item, quantity: item.quantity + 1 }
+                        : item
+                );
+            }
+            toast.success(`${product.name} added to order.`, {
+                style: {
+                    color: "green",
+                },
+            });
+            return [...prevItems, { productId: product.id, productName: product.name, quantity: 1 }];
+        });
+    };
+
+    const handleRemoveItem = (productId: number) => {
+        const product = orderItems.find((item) => item.productId === productId);
+        setOrderItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+        if (product) {
+            toast.success(`${product.productName} removed from order.`, {
+                style: {
+                    color: "green",
+                },
+            });
+        }
     };
 
     const handleSubmit = async () => {
-        setIsLoading(true);
-
-        const orderData = {
-            userId: 1, // Assuming logged-in user ID (you might want to dynamically get the user ID)
-            orderStatus: 'pending',
-            totalAmount: orderItems.reduce((sum, item) => sum + item.quantity * 10, 0), // Assume price is 10 for each item
-            deliveryAddress,
-            orderItems,
-        };
-
-        // Retrieve the token from localStorage
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            alert('You are not logged in!');
-            setIsLoading(false);
+        if (!deliveryAddress.trim()) {
+            toast.error("Please provide a delivery address.", {
+                style: {
+                    color: "red",
+                },
+            });
             return;
         }
 
-        const response = await fetch(`${baseUrl}/Orders`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'token': `Bearer ${token}`, // Add token to Authorization header
-            },
-            body: JSON.stringify(orderData),
-        });
-
-        if (response.ok) {
-            alert('Order placed successfully!');
-        } else {
-            alert('Failed to place order.');
+        if (!token) {
+            toast.error("You are not logged in!", {
+                style: {
+                    color: "yellow",
+                },
+            });
+            return;
         }
 
-        setIsLoading(false);
+        setIsLoading(true);
+
+        const orderData = {
+            userId,
+            orderStatus: "pending",
+            totalAmount: orderItems.reduce((sum, item) => {
+                const product = products.find((p) => p.id === item.productId);
+                return sum + item.quantity * (product?.price || 0);
+            }, 0),
+            deliveryAddress,
+            orderItems: orderItems.map((item) => ({
+                productId: item.productId,
+                quantity: item.quantity,
+            })),
+        };
+
+        try {
+            const response = await fetch(`${baseUrl}/Orders`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            if (response.ok) {
+                toast.success("Order placed successfully!", {
+                    style: {
+                        color: "green",
+                    },
+                });
+                setOrderItems([]);
+                setDeliveryAddress("");
+            } else {
+                toast.error("Failed to place order.", {
+                    style: {
+                        color: "red",
+                    },
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("An error occurred while placing the order.", {
+                style: {
+                    color: "red",
+                },
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-
-
+    if (isFetchingProducts) {
+        return <div>Loading products...</div>;
+    }
 
     return (
-        <div className="w-2/3 mx-auto p-6">
-
+        <div className="w-full mx-auto p-6">
             <h2 className="text-2xl font-semibold mb-6">Create New Order</h2>
 
-            <div className="mb-6">
-                <h4 className="text-lg font-medium mb-4">Products</h4>
-                <div className="space-y-4">
-                    {products.map((product) => (
-                        <Card key={product.id} className="p-4 flex justify-between items-center">
-                            <div>
-                                <p className="font-semibold text-xl">{product.name}</p>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Price: $10</p>
-                            </div>
-                            <Button onClick={() => handleAddItem(product.id)} variant="outline">
-                                Add to Order
-                            </Button>
-                        </Card>
-                    ))}
+            <div className='flex gap-10'>
+                <div className="w-full">
+                    <h4 className="text-xl font-semibold">Products</h4>
+                    <hr className='mb-4' />
+                    <div className="space-y-4">
+                        {products.map((product) => (
+                            <Card key={product.id} className="p-4 flex justify-between items-center">
+                                <div>
+                                    <p className="font-medium text-xl">{product.name}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Price: {`$${product.price}`}</p>
+                                </div>
+                                <Button onClick={() => handleAddItem(product)} variant="outline">
+                                    Add to Order
+                                </Button>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+                <div className="w-2/3">
+                    <h4 className="text-xl font-semibold">Order Items</h4>
+                    <hr className='mb-4' />
+                    <div className="space-y-4">
+                        {orderItems.map((item, index) => (
+                            <Card key={index} className="p-4 flex justify-between items-center">
+                                <div>
+                                    <p className="text-xl font-medium text-gray-700 dark:text-gray-300">{item.productName}</p>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300">Quantity: {item.quantity}</p>
+                                </div>
+                                <Button
+                                    onClick={() => handleRemoveItem(item.productId)}
+                                    variant="destructive"
+                                    className="ml-4"
+                                >
+                                    Remove
+                                </Button>
+                            </Card>
+                        ))}
+                    </div>
                 </div>
             </div>
 
-            <div className="mb-6">
-                <h4 className="text-lg font-medium mb-4">Order Items</h4>
-                <div className="space-y-2">
-                    {orderItems.map((item, index) => (
-                        <Card key={index} className="p-4 flex justify-between">
-                            <div>
-                                <p className="text-sm text-gray-700 dark:text-gray-300">Product ID: {item.productId}</p>
-                                <p className="text-sm text-gray-700 dark:text-gray-300">Quantity: {item.quantity}</p>
-                            </div>
-                        </Card>
-                    ))}
-                </div>
-            </div>
-
-            <div className="mb-6">
+            <div className="my-4">
                 <h4 className="text-lg font-medium mb-2">Delivery Address</h4>
                 <Input
                     value={deliveryAddress}
