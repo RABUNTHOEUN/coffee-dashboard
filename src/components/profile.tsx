@@ -1,42 +1,51 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';  // Assuming you have a custom Button component
-import { Edit } from 'lucide-react';  // Assuming you are using lucide-react icons
+
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button"; // Assuming you have a custom Button component
+import { Edit } from "lucide-react"; // Assuming you are using lucide-react icons
+import Link from "next/link";
+import Image from "next/image";
 
 // Define the user type for better type safety
 interface User {
+    id?: string;
     firstName: string;
     lastName: string;
     email: string;
-    avatar: string;
+    avatar?: string;
 }
 
 const Profile: React.FC = () => {
-    // Set initial user state with default values
     const [user, setUser] = useState<User>({
+        id: "",
         firstName: "",
         lastName: "",
         email: "",
         avatar: "",
     });
 
-    // Fetch user data from localStorage on component mount
     useEffect(() => {
         const userInfo = localStorage.getItem("user");
         if (userInfo) {
             try {
                 const parsedUser = JSON.parse(userInfo);
-                // Ensure the parsed data matches the expected structure
-                if (parsedUser && parsedUser.firstName && parsedUser.lastName && parsedUser.email) {
-                    setUser(parsedUser);  // Set user data in state
+                if (
+                    parsedUser?.id &&
+                    parsedUser?.firstName &&
+                    parsedUser?.lastName &&
+                    parsedUser?.email
+                ) {
+                    setUser(parsedUser); // Update user state
                 } else {
                     console.error("Invalid user data structure in localStorage.");
+                    localStorage.removeItem("user");
                 }
             } catch (error) {
                 console.error("Failed to parse user info from localStorage:", error);
+                localStorage.removeItem("user");
             }
         }
-    }, []);  // Empty dependency array means this effect runs once when the component mounts
+    }, []);
 
     return (
         <div>
@@ -59,15 +68,27 @@ const Profile: React.FC = () => {
                     </div>
                     <div className="flex flex-col">
                         <label className="text-sm text-gray-600 dark:text-gray-300">Avatar</label>
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">{user.avatar || "N/A"}</p>
+                        {user.avatar ? (
+                            <Image
+                                src={user.avatar}
+                                alt="User Avatar"
+                                className="h-16 w-16 rounded-full border"
+                                width={20}
+                                height={20}
+                            />
+                        ) : (
+                            <p className="text-lg font-medium text-gray-900 dark:text-white">N/A</p>
+                        )}
                     </div>
                 </div>
 
                 <div className="mt-6 flex gap-2">
-                    <Button variant="outline" className="hover:text-blue-600">
-                        <Edit className="mr-2" />
-                        Edit Profile
-                    </Button>
+                    <Link href={`/dashboard/profile/${user.id || "unknown"}`}>
+                        <Button variant="outline" className="hover:text-blue-600">
+                            <Edit className="mr-2" />
+                            Edit Profile
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </div>

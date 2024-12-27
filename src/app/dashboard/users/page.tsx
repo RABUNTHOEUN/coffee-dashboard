@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -8,17 +10,13 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import ProductPagination from '@/components/pagination/page';
-import { Button } from '@/components/ui/button';
-import { Edit, Trash2 } from 'lucide-react';
-import { baseUrl } from '@/utils/config';
-import moment from 'moment';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "User",
-    description: "User",
-};
+import ProductPagination from "@/components/pagination/page";
+import { Button } from "@/components/ui/button";
+import { Edit, Trash2 } from "lucide-react";
+import { baseUrl } from "@/utils/config";
+import moment from "moment";
+import Link from "next/link";
+import { toast } from "sonner";
 
 interface User {
     id: string | number;
@@ -30,19 +28,63 @@ interface User {
     createdAt?: Date | string;
 }
 
+const Page = () => {
+    const [users, setUsers] = useState<User[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-const page = async () => {
+    // Fetch users on component mount
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch(`${baseUrl}/Users`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setUsers(data);
+            } catch (error) {
+                console.error("Failed to fetch users:", error);
+                toast.error("Failed to fetch users.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    let users = [];
+        fetchUsers();
+    }, []);
 
-    try {
-        const data = await fetch(`${baseUrl}/Users`);
-        if (!data.ok) {
-            throw new Error(`HTTP error! status: ${data.status}`);
+    // Handle user delete
+    const handleDelete = async (id: string | number) => {
+        if (!confirm("Are you sure you want to delete this user?")) return;
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch(`${baseUrl}/Users/${id}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to delete user with ID ${id}`);
+            }
+
+            toast.success("User deleted successfully!", {
+                style: {
+                    color: 'green'
+                }
+            });
+            // Remove the deleted user from the state
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            toast.error("Failed to delete user.");
+        } finally {
+            setIsDeleting(false);
         }
-        users = await data.json();
-    } catch (error) {
-        console.error("Failed to fetch Users:", error);
+    };
+
+    if (loading) {
+        return <p>Loading users...</p>;
     }
 
     return (
@@ -73,13 +115,26 @@ const page = async () => {
                             <TableCell>{user.email || "N/A"}</TableCell>
                             <TableCell>{user.role || "N/A"}</TableCell>
                             <TableCell>{user.phoneNumber || "N/A"}</TableCell>
-                            <TableCell className='min-w-32'>
-                                {user.createdAt ? moment(user.createdAt).format('MMM, DD, YYYY') : "N/A"}
+                            <TableCell className="min-w-32">
+                                {user.createdAt
+                                    ? moment(user.createdAt).format("MMM, DD, YYYY")
+                                    : "N/A"}
                             </TableCell>
                             <TableCell>
-                                <div className='flex gap-2'>
-                                    <Button variant="outline" className='hover:text-blue-600'><Edit /></Button>
-                                    <Button variant="outline" className='hover:text-red-600'><Trash2 /></Button>
+                                <div className="flex gap-2">
+                                    <Link href={`/dashboard/users/${user.id}`}>
+                                        <Button variant="outline" className="hover:text-blue-600">
+                                            <Edit />
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        onClick={() => handleDelete(user.id)}
+                                        variant="outline"
+                                        className="hover:text-red-600"
+                                        disabled={isDeleting}
+                                    >
+                                        <Trash2 />
+                                    </Button>
                                 </div>
                             </TableCell>
                         </TableRow>
@@ -91,4 +146,4 @@ const page = async () => {
     );
 };
 
-export default page;
+export default Page;
