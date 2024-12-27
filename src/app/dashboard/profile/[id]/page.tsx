@@ -145,7 +145,7 @@ const UserDetail: React.FC = () => {
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Updating..." : "Update User"}
+            {loading ? "Updating..." : "Update Profile"}
           </Button>
         </form>
       )}
