@@ -2,7 +2,7 @@ import { AreaChartComponent } from '@/components/area-chart';
 import { BarChartComponent } from '@/components/bar-chart';
 import { PieChartComponent } from '@/components/pie-chart';
 import { AreaChartInteractiveComponent } from '@/components/area-chart-interactive';
-import Invoice from './invoice/page';
+import RecentOrdersPage from './order/recent-order/page';
 
 
 const Home = () => {
@@ -22,7 +22,7 @@ const Home = () => {
                 <AreaChartInteractiveComponent />
             </div>
             <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min my-4 pt-4">
-                <Invoice />
+                <RecentOrdersPage />
             </div>
         </div>
     );
