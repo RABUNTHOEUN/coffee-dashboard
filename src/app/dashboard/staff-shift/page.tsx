@@ -20,14 +20,23 @@ export const metadata: Metadata = {
     description: "Staff Shift",
 };
 
+interface User{
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+}
+
 interface StaffShift {
-    id: string | number;
+    shiftId: string | number;
     userId: string | number;
     startTime?: Date | string;
     endTime?: Date | string;
     shiftDate?: Date | string;
-    user?: string;
+    user?: User;
 }
+
+
 
 
 const page = async () => {
@@ -40,6 +49,8 @@ const page = async () => {
             throw new Error(`HTTP error! status: ${data.status}`);
         }
         staffshifts = await data.json();
+        console.log(staffshifts);
+
     } catch (error) {
         console.error("Failed to fetch staffshifts:", error);
     }
@@ -59,31 +70,42 @@ const page = async () => {
                         <TableHead>End Time</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead>User</TableHead>
+                        <TableHead>User Email</TableHead>
                         <TableHead>Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {staffshifts.map((staffshift: StaffShift, index: number) => (
-                        <TableRow key={staffshift.id}>
+                        <TableRow key={staffshift.shiftId}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{staffshift.userId}</TableCell>
-                            <TableCell className='min-w-32'>
-                                {staffshift.startTime ? moment(staffshift.startTime).format('MMM, DD, YYYY') : "N/A"}
+                            <TableCell className="min-w-32">
+                                {staffshift.startTime ? moment(staffshift.startTime).format("MMM, DD, YYYY") : "N/A"}
                             </TableCell>
-                            <TableCell className='min-w-32'>
-                                {staffshift.endTime ? moment(staffshift.endTime).format('MMM, DD, YYYY') : "N/A"}
+                            <TableCell className="min-w-32">
+                                {staffshift.endTime ? moment(staffshift.endTime).format("MMM, DD, YYYY") : "N/A"}
                             </TableCell>
-                            <TableCell className='min-w-32'>
-                                {staffshift.shiftDate ? moment(staffshift.shiftDate).format('MMM, DD, YYYY') : "N/A"}
+                            <TableCell className="min-w-32">
+                                {staffshift.shiftDate ? moment(staffshift.shiftDate).format("MMM, DD, YYYY") : "N/A"}
                             </TableCell>
-                            <TableCell>{staffshift.user || "N/A"}</TableCell>
                             <TableCell>
-                                <div className='flex gap-2'>
-                                    <Button variant="outline" className='hover:text-blue-600'><Edit /></Button>
-                                    <Button variant="outline" className='hover:text-red-600'><Trash2 /></Button>
+                                {staffshift.user
+                                    ? `${staffshift.user.firstName} ${staffshift.user.lastName}`
+                                    : "N/A"}
+                            </TableCell>
+                            <TableCell>
+                                {staffshift.user
+                                    ? `${staffshift.user.email}`
+                                    : "N/A"}
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex gap-2">
+                                    <Button variant="outline" className="hover:text-blue-600"><Edit /></Button>
+                                    <Button variant="outline" className="hover:text-red-600"><Trash2 /></Button>
                                 </div>
                             </TableCell>
                         </TableRow>
+
                     ))}
                 </TableBody>
             </Table>
