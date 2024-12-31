@@ -10,15 +10,22 @@ import {
 } from "@/components/ui/table";
 import ProductPagination from '@/components/pagination/page';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Star, Trash2 } from 'lucide-react';
 import { baseUrl } from '@/utils/config';
 import moment from 'moment';
 import { Metadata } from 'next';
+import { Product } from '@/app/types';
 
 export const metadata: Metadata = {
     title: "Review",
     description: "Review",
 };
+
+interface User {
+    firstName: string;
+    lastName: string;
+}
+
 
 interface Review {
     id: string | number;
@@ -27,8 +34,24 @@ interface Review {
     rating?: number;
     reviewText?: string;
     reviewDate?: string | Date;
+    user?: User;
+    product?: Product;
 }
 
+const RatingStars = ({ rating }: { rating: number }) => {
+    return (
+        <div className="flex gap-1">
+            {[...Array(5)].map((_, index) => (
+                <Star
+                    size={18}
+                    key={index}
+                    className={`${index < rating ? 'text-yellow-500' : 'text-gray-400'
+                        }`}
+                />
+            ))}
+        </div>
+    );
+};
 
 const page = async () => {
 
@@ -66,9 +89,19 @@ const page = async () => {
                     {reviews.map((review: Review, index: number) => (
                         <TableRow key={review.id}>
                             <TableCell className="font-medium">{index + 1}</TableCell>
-                            <TableCell>{review.userId}</TableCell>
-                            <TableCell>{review.productId || "N/A"}</TableCell>
-                            <TableCell>{review.rating || 0}</TableCell>
+                            <TableCell>
+                                {review.user
+                                    ? `${review.user.firstName} ${review.user.lastName}`
+                                    : "N/A"}
+                            </TableCell>
+                            <TableCell>
+                                {review.product
+                                    ? `${review.product.name}`
+                                    : "N/A"}
+                            </TableCell>
+                            <TableCell>
+                                <RatingStars rating={Number(review.rating) || 0} />
+                            </TableCell>
                             <TableCell>{review.reviewText || "N/A"}</TableCell>
                             {/* <TableCell>{review.reviewDate || "N/A"}</TableCell> */}
                             <TableCell className='min-w-32'>
