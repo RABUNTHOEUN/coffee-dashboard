@@ -18,20 +18,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const router = useRouter();
 
   useEffect(() => {
     // Ensure this runs only on the client
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       if (!token) {
         router.replace("/login"); // Redirect to login page
@@ -42,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider>

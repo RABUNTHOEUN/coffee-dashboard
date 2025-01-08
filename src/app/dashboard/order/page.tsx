@@ -170,6 +170,7 @@ const OrdersPage = () => {
                 <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
                     Orders List
                 </h1>
+                <p>Already Crud Operation can Create Edit And Delete</p>
                 <Link href="/dashboard/order/create">
                     <Button className="px-8 font-semibold">New</Button>
                 </Link>

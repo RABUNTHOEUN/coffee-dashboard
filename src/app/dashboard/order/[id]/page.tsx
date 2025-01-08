@@ -193,7 +193,7 @@ const Page = () => {
           />
         </div>
         <div className="flex justify-end">
-          <Button onClick={handleSave} disabled={isLoading} variant="outline" className="w-full sm:w-auto">
+          <Button onClick={handleSave} disabled={isLoading}  className="w-full sm:w-auto">
             {isLoading ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>

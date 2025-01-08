@@ -89,11 +89,12 @@ const CategoryPage = () => {
 
 
     return (
-        <div>
+        <div suppressHydrationWarning>
             <div className='flex items-center justify-between'>
                 <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white ml-4">
                     Category List
                 </h1>
+                <p>Already Crud Operation can Create Edit And Delete</p>
                 <Link href="/dashboard/categories/create">
                     <Button className='px-8 font-semibold'>New</Button>
                 </Link>
@@ -105,7 +106,7 @@ const CategoryPage = () => {
                         <TableHead className="w-[100px]">ID</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Description</TableHead>
-                        <TableHead>Products Count</TableHead>
+                        {/* <TableHead>Products Count</TableHead> */}
                         <TableHead>Action</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -115,7 +116,7 @@ const CategoryPage = () => {
                             <TableCell className="font-medium">{index + 1}</TableCell>
                             <TableCell>{category.name}</TableCell>
                             <TableCell>{category.description || "N/A"}</TableCell>
-                            <TableCell>{category.productCount || 0}</TableCell>
+                            {/* <TableCell>{category.productCount || 0}</TableCell> */}
                             <TableCell>
                                 <div className='flex gap-2'>
                                     <Link href={`/dashboard/categories/${category.id}`}>

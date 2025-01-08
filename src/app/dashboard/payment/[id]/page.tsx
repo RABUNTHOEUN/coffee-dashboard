@@ -83,7 +83,7 @@ const CategoryDetail = () => {
   };
 
   return (
-    <div suppressHydrationWarning className="p-4 w-1/2 mx-auto">
+    <div className="p-4 w-1/2 mx-auto">
       <h2 className="text-xl font-bold mb-4">Edit Category</h2>
       {loading ? (
         <p>Loading...</p>

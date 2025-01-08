@@ -8,7 +8,7 @@ import RecentOrdersPage from './order/recent-order/page';
 const Home = () => {
 
     return (
-        <div>
+        <div suppressHydrationWarning>
             <h1 className="text-2xl font-bold text-start text-gray-900 dark:text-white mb-4 ml-4">
                 Dashboard
             </h1>
